@@ -1,19 +1,34 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
+    "baseUrl": "./",
+    "paths": {
+      "@/api/*": ["src/pages/api/*"],
+      "@/lib/*": ["src/lib/*"],
+      "@/components/*": ["src/components/*"]
+    },
+
     "allowJs": true,
+    "allowSyntheticDefaultImports": true, // allow import React from 'react';
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
+
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
     "resolveJsonModule": true,
+    "removeComments": false,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "sourceMap": true,
+    "preserveConstEnums": true,
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "src/global.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
