@@ -1,17 +1,9 @@
-import { Flex, FlexProps } from '@chakra-ui/react'
+import { AspectRatio, AspectRatioProps } from '@chakra-ui/react'
 
-export const Container = (props: FlexProps) => (
-  <Flex
-    direction="column"
-    justifyContent="center"
-    alignItems="center"
-    bg="gray.50"
-    color="black"
-    _dark={{
-      bg: 'gray.900',
-      color: 'white',
-    }}
-    transition="all 0.15s ease-out"
+export const Card = (props: AspectRatioProps) => (
+  <AspectRatio
+    position = "relative"
+    ratio={[4/3, 3/4]}
     {...props}
   />
 )
