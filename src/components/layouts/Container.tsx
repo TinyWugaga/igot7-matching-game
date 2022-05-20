@@ -3,7 +3,7 @@ import { Flex, FlexProps } from '@chakra-ui/react'
 export const Container = (props: FlexProps) => (
   <Flex
     direction="column"
-    justifyContent="center"
+    justifyContent="flex-start"
     alignItems="center"
     bg="gray.50"
     color="black"
