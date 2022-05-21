@@ -1,4 +1,6 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
+import { GetStaticProps, GetStaticPaths } from "next";
 
 import { Grid, GridItem, Image } from "@chakra-ui/react";
 
@@ -8,19 +10,26 @@ import { Main } from "@/components/layouts/Main";
 import { Footer } from "@/components/layouts/Footer";
 
 import { DarkModeSwitch } from "@/components/DarkModeSwitch";
-import { GroupMenuButton } from "@/components/GroupMenuButton";
 import { Card } from "@/components/Card";
 
-import usePuzzle from "@/lib/useHook/usePuzzle";
+import { fetchCards, countPuzzleSize } from "@/lib/useHook/usePuzzle";
+import { DATABASE_NAME } from "@/lib/notion/constants";
 
-const Index = () => {
-  const [groupId, setGroupId] = useState(1);
+type GameAppProps = {
+  errors?: string
+}
+
+const GameApp = ({ puzzle, puzzleSize, errors }: PuzzleProps & GameAppProps) => {
+  if(errors) {
+    return (
+      <div>{errors}</div>
+    )
+  }
+
   const [activeCards, setActiveCards] = useState<number[]>([]);
   const [hitCards, setHitCards] = useState<number[]>([]);
 
   const [isHitting, setIsHitting] = useState(false);
-
-  const { puzzle, puzzleSize } = usePuzzle({ groupId });
 
   useEffect(() => {
     // TODO: set can't hit status
@@ -46,21 +55,10 @@ const Index = () => {
     }
   };
 
-  useEffect(() => {
-    resetGame()
-  }, [puzzle]);
-
-  const resetGame = () => {
-    setActiveCards([])
-    setHitCards([])
-    setIsHitting(false)
-  }
-
   return (
     <Container height="100vh">
       <Hero />
-
-      <Main width={["100%", "100%", `${56 / (4 / (puzzleSize.col))}vw`]}>
+      <Main width={["100%", "100%", `${56 / (4 / puzzleSize.col)}vw`]}>
         <Grid
           width="100%"
           height="100%"
@@ -74,7 +72,7 @@ const Index = () => {
             null,
             `repeat(${puzzleSize.col}, 1fr)`,
           ]}
-          gap={["3", "5", `${8 / ((puzzleSize.col) / 4)}`]}
+          gap={["3", "5", `${8 / (puzzleSize.col / 4)}`]}
         >
           {Boolean(puzzle.length) &&
             puzzle.map((card: { name: string; url: string }, i) => (
@@ -111,10 +109,7 @@ const Index = () => {
             ))}
         </Grid>
       </Main>
-
       <DarkModeSwitch />
-      <GroupMenuButton onClick={() => setGroupId(groupId + 1)} />
-
       <Footer>
         <Image
           width="auto"
@@ -127,6 +122,40 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default GameApp;
 
-// IGOT7 🐣 AHGASAE
+export const getStaticPaths: GetStaticPaths = async () => {
+  try {
+    const { data: groupData } = await axios.get(
+      `/api/notion/${DATABASE_NAME.GROUPS}`
+    );
+
+    // Get the paths we want to pre-render based on users
+    const paths = groupData.map((data: any) => ({
+      params: { id: data.properties.id.title[0].text.content },
+    }));
+
+    // We'll pre-render only these paths at build time.
+    // { fallback: false } means other routes should 404.
+    return { paths, fallback: false };
+  } catch (err:any) {
+    console.log({ err })
+    return { paths: [{ params: { id: 1 }}], fallback: false };
+  }
+};
+
+// This function gets called at build time on server-side.
+// It won't be called on client-side, so you can even do
+// direct database queries.
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  try {
+    const id = (params?.id || "1").toString();
+    const puzzle = await fetchCards(id);
+    const puzzleSize = countPuzzleSize(puzzle.length);
+
+    return { props: { puzzle, puzzleSize } };
+  } catch (err:any) {
+    console.log({ err })
+    return { props: { errors: err.message } };
+  }
+};

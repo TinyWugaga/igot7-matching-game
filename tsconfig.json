@@ -1,14 +1,23 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "baseUrl": "./",
     "paths": {
-      "@/api/*": ["src/pages/api/*"],
-      "@/lib/*": ["src/lib/*"],
-      "@/components/*": ["src/components/*"]
+      "@/api/*": [
+        "src/pages/api/*"
+      ],
+      "@/lib/*": [
+        "src/lib/*"
+      ],
+      "@/components/*": [
+        "src/components/*"
+      ]
     },
-
     "allowJs": true,
     "allowSyntheticDefaultImports": true, // allow import React from 'react';
     "skipLibCheck": true,
@@ -18,10 +27,8 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
-
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-
     "resolveJsonModule": true,
     "removeComments": false,
     "isolatedModules": true,
@@ -29,6 +36,14 @@
     "sourceMap": true,
     "preserveConstEnums": true,
   },
-  "include": ["next-env.d.ts", "src/global.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "src/lib/useHook/*.d.ts",
+    "src/global.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+, "src/lib/useHook/usePuzzle.ts"  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

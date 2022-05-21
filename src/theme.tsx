@@ -3,25 +3,25 @@ import { createBreakpoints } from '@chakra-ui/theme-tools'
 
 const sizes = {
   header: {
-    sm: '6em',
-    md: '10em',
-    lg: '10em'
+    sm: '7em',
+    md: '8em',
+    lg: '8em'
   },
   footer: {
-    sm: '4em',
+    sm: '5em',
     md: '8em',
     lg: '8em'
   },
   mainHeight: {
-    sm: 'calc(100% - 10em)',
-    md: 'calc(100% - 18em)',
-    lg: 'calc(100% - 18em)'
+    sm: 'calc(100% - 12em)',
+    md: 'calc(100% - 16em)',
+    lg: 'calc(100% - 16em)'
   }
 }
 
 const space = {
   footer: {
-    sm: '1rem',
+    sm: '1.6rem',
     md: '2rem',
     lg: '2.6rem'
   }

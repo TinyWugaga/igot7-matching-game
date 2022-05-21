@@ -6,7 +6,7 @@ export const Card = (props: AspectRatioProps) => (
     width= "100%"
     height= "100%"
     bg="green.500"
-    ratio={[4/3, 3/4]}
+    ratio={[4/3, 3/4, 2/3]}
     {...props}
   />
 )
