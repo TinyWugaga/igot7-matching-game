@@ -1,103 +1,60 @@
-import { useState, useEffect } from "react";
-
-import { Grid, GridItem, Image } from "@chakra-ui/react";
+import { Grid, GridItem, Image, Text, Button } from "@chakra-ui/react";
 
 import { Container } from "@/components/layouts/Container";
 import { Hero } from "@/components/layouts/Hero";
 import { Main } from "@/components/layouts/Main";
 import { Footer } from "@/components/layouts/Footer";
+import { PuzzleGrid, PuzzleGridItem } from "@/components/layouts/PuzzleGrid";
 
-import { DarkModeSwitch } from "@/components/DarkModeSwitch";
+import { GameMenu } from "@/components/GameMenu";
 import { GroupMenuButton } from "@/components/GroupMenuButton";
-import { Card } from "@/components/Card";
+import { Card } from "@/components/layouts/Card";
 
 import usePuzzle from "@/lib/useHook/usePuzzle";
+import useCard from "@/lib/useHook/useCard";
+import useTimer from "@/lib/useHook/useTimer";
 
 const Index = () => {
-  const [groupId, setGroupId] = useState(1);
-  const [activeCards, setActiveCards] = useState<number[]>([]);
-  const [hitCards, setHitCards] = useState<number[]>([]);
-
-  const [isHitting, setIsHitting] = useState(false);
-
-  const { puzzle, puzzleSize } = usePuzzle({ groupId });
-
-  useEffect(() => {
-    // TODO: set can't hit status
-    setTimeout(() => {
-      if (activeCards.length === 2) {
-        setIsHitting(true);
-
-        const isHit =
-          puzzle[activeCards[0]].cardId === puzzle[activeCards[1]].cardId;
-
-        if (isHit) {
-          setHitCards([...hitCards, ...activeCards]);
-        }
-        setActiveCards([]);
-        setIsHitting(false);
-      }
-    }, 680);
-  }, [activeCards]);
-
-  const onHitCard = async (index: number) => {
-    if (!isHitting && activeCards.length < 2) {
-      setActiveCards([...activeCards, index]);
-    }
-  };
-
-  useEffect(() => {
-    resetGame()
-  }, [puzzle]);
-
-  const resetGame = () => {
-    setActiveCards([])
-    setHitCards([])
-    setIsHitting(false)
-  }
+  const { puzzleGroups, puzzle, puzzleSize, setPuzzleGroupId } = usePuzzle();
+  const { activeCards, hitCards, onHitCard } = useCard({ puzzle });
+  const {
+    startTimer,
+    // stopTimer,
+    // resumeTimer,
+    // resetTimer,
+    currentTimer,
+  } = useTimer();
 
   return (
     <Container height="100vh">
-      <Hero />
-
-      <Main width={["100%", "100%", `${56 / (4 / (puzzleSize.col))}vw`]}>
-        <Grid
-          width="100%"
-          height="100%"
-          templateColumns={[
-            `repeat(${puzzleSize.col}, 1fr)`,
-            null,
-            `repeat(${puzzleSize.row}, 1fr)`,
-          ]}
-          templateRows={[
-            `repeat(${puzzleSize.row}, 1fr)`,
-            null,
-            `repeat(${puzzleSize.col}, 1fr)`,
-          ]}
-          gap={["3", "5", `${8 / ((puzzleSize.col) / 4)}`]}
+      <Hero>
+        <GroupMenuButton
+          groups={puzzleGroups}
+          onClick={(id) => setPuzzleGroupId(id)}
+        />
+        <Button
+          isLoading={Boolean(puzzle.length === 0)}
+          loadingText="Preparing"
+          colorScheme="teal"
+          variant="outline"
+          onClick={startTimer}
         >
+          Start Game
+        </Button>
+        <Text>{currentTimer}</Text>
+      </Hero>
+
+      <Main>
+        <PuzzleGrid puzzleSize={puzzleSize}>
           {Boolean(puzzle.length) &&
             puzzle.map((card: { name: string; url: string }, i) => (
-              <GridItem
-                key={i}
-                position="relative"
-                w={["100%", null, "auto"]}
-                h={["auto", null, "100%"]}
-                rounded="lg"
-                cursor="pointer"
-                overflow="hidden"
-                boxShadow="base"
-                _hover={{
-                  boxShadow: "md",
-                }}
-                onClick={() => onHitCard(i)}
-              >
+              <PuzzleGridItem key={i} onClick={() => onHitCard(i)}>
                 <Card>
                   <Image
-                    src={card.url}
                     position="absolute"
                     height="100%"
                     objectFit="cover"
+                    src={card.url}
                     alt={card.name}
                     style={{
                       visibility:
@@ -107,21 +64,32 @@ const Index = () => {
                     }}
                   />
                 </Card>
-              </GridItem>
+              </PuzzleGridItem>
             ))}
-        </Grid>
+        </PuzzleGrid>
+        <GameMenu />
       </Main>
-
-      <DarkModeSwitch />
-      <GroupMenuButton onClick={() => setGroupId(groupId + 1)} />
 
       <Footer>
         <Image
-          width="auto"
+          width="12%"
           height="100%"
           objectFit="contain"
-          src="assets/tiny_logo_text.svg"
+          src="assets/TINYWXCVIII_3D.PNG"
         />
+        <Text
+          width="88%"
+          height="100%"
+          pt={["0", null, "0.5em"]}
+          color="gray.600"
+          fontSize={[".7em", null, ".9em"]}
+          lineHeight="1.2"
+          whiteSpace="pre-line"
+        >
+          Made by TINYWXCVIII.
+          <br />
+          COPYRIGHT © 2022 WARNER MUSIC KOREA. All Images Rights Reserved.
+        </Text>
       </Footer>
     </Container>
   );
