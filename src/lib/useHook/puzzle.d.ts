@@ -1,3 +1,6 @@
+interface PuzzleGroup {
+  id: number;
+}
 interface Puzzle {
   cardId: number;
   name: string;

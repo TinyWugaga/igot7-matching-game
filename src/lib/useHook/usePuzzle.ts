@@ -29,6 +29,20 @@ export function countPuzzleSize(number: number) {
   return { col: number / 2, row: 2 };
 }
 
+export async function fetchCardGroups() {
+  const { data } = await axios.get(`/api/notion/${DATABASE_NAME.GROUPS}`, {
+    params: {
+      sorts: { sorts:[["id", "ascending"]]},
+    },
+  });
+
+  const groups = data.map((group: any) => ({
+    id: group.properties.id.title[0].text.content,
+  }));
+
+  return groups;
+}
+
 export async function fetchCards(groupId: number | string) {
   const { data } = await axios.get(`/api/notion/${DATABASE_NAME.CARDS}`, {
     params: {
@@ -47,22 +61,33 @@ export async function fetchCards(groupId: number | string) {
   return cards;
 }
 
-export default function({ groupId = 1 }: { groupId: number | string }) {
+export default function() {
+  const [puzzleGroupId, setPuzzleGroupId] = useState(1);
+  const [puzzleGroups, setPuzzleGroup] = useState<PuzzleGroup[]>([]);
   const [puzzle, setPuzzle] = useState<Puzzle[]>([]);
   const [puzzleSize, setPuzzleSize] = useState<PuzzleSize>({ col: 0, row: 0 });
 
+  const getPuzzleGroup = async () => {
+    const groups = await fetchCardGroups();
+    setPuzzleGroup(groups);
+  };
+
   useEffect(() => {
     const initPuzzle = async () => {
-      const cards = await fetchCards(groupId)
+      await getPuzzleGroup();
+      const cards = await fetchCards(puzzleGroupId);
 
       setPuzzle(generatePuzzle(cards));
       setPuzzleSize(countPuzzleSize(cards.length));
     };
 
     initPuzzle();
-  }, [groupId]);
+  }, [puzzleGroupId]);
 
   return {
+    setPuzzleGroupId,
+
+    puzzleGroups,
     puzzle,
     puzzleSize,
   };
