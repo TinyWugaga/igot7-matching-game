@@ -1,8 +1,9 @@
-import { Flex, Heading } from '@chakra-ui/react'
+import { ReactNode } from 'react'
+import { Flex, Heading, Stack } from '@chakra-ui/react'
 
 import { DarkModeSwitch } from "@/components/DarkModeSwitch";
 
-export const Hero = ({ title }: { title: string }) => (
+export const Hero = ({ title, children }:{ title?:string, children?:ReactNode}) => (
   <Flex
     position="relative"
     top="0"
@@ -14,13 +15,16 @@ export const Hero = ({ title }: { title: string }) => (
     bgGradient="linear(to-l, heroGradientStart, heroGradientEnd)"
     bgClip="text"
   >
-    <Heading fontSize={["1.8em", "3.2em", "4em"]}>
-      {title}
-      <DarkModeSwitch/>
+    <Heading fontSize={["heading.sm", "heading.md", "heading.lg"]}>
+      { title }
     </Heading>
+    <Stack direction={['column', 'row']} spacing='24px'>
+      {children}
+      <DarkModeSwitch/>
+    </Stack>
   </Flex>
 )
 
-Hero.defaultProps = {
-  title: 'IGOT7 💚 Matching Game',
-}
+// Hero.defaultProps = {
+//   title: 'IGOT7 💚 Matching Game',
+// }

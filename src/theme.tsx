@@ -5,17 +5,24 @@ const sizes = {
   header: {
     sm: '7em',
     md: '8em',
-    lg: '8em'
+    lg: '6em'
   },
   footer: {
-    sm: '5em',
-    md: '8em',
-    lg: '8em'
+    sm: '6em',
+    md: '9em',
+    lg: '9em'
   },
-  mainHeight: {
-    sm: 'calc(100% - 12em)',
-    md: 'calc(100% - 16em)',
-    lg: 'calc(100% - 16em)'
+  main: {
+    width: {
+      sm: '26em',
+      md: '45em',
+      lg: '50em'
+    },
+    height: {
+      sm: 'calc(100% - 13em)',
+      md: 'calc(100% - 17em)',
+      lg: 'calc(100% - 15em)'
+    }
   }
 }
 
@@ -33,11 +40,19 @@ const colors = {
 
 const fonts = { mono: `'Menlo', monospace` }
 
+const fontSizes = { 
+  heading: {
+    sm: "1.8em",
+    md: "3.2em",
+    lg: "4em"
+  }
+ }
+
 const breakpoints = createBreakpoints({
-  sm: '40em',
-  md: '52em',
-  lg: '64em',
-  xl: '80em',
+  sm: '30em', // 16:480
+  md: '48em', // 16:768
+  lg: '64em', // 16:1024
+  xl: '80em', // 16:1280
 })
 
 const theme = extendTheme({
@@ -56,7 +71,7 @@ const theme = extendTheme({
         _dark: '#fbec8f',
       },
       ahgasae: {
-        default: '#54812c',
+        default: 'rgba(80, 170, 91, 1)',
         _dark: '#a8d18b',
       }
     },
@@ -66,6 +81,8 @@ const theme = extendTheme({
   
   colors,
   fonts,
+  fontSizes,
+
   breakpoints,
 })
 

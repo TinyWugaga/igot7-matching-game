@@ -5,8 +5,8 @@ export const Main = (props: StackProps) => (
     position="relative"
     spacing="1.5rem"
     width="100%"
-    height={["mainHeight.sm", "mainHeight.md", "mainHeight.lg"]}
-    maxWidth={["90vw", "86vw"]}
+    height={["main.height.sm", "main.height.md", "main.height.lg"]}
+    maxWidth={["main.width.sm", "main.width.md", "main.width.lg"]}
     pt={["1rem", "2rem"]}
     px={["1rem", "3rem"]}
     {...props}

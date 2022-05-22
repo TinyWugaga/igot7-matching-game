@@ -1,20 +1,30 @@
-import { IconButton } from '@chakra-ui/react'
-import { ArrowRightIcon } from '@chakra-ui/icons'
+import { Button, ButtonGroup } from "@chakra-ui/react";
 
 type GroupMenuButtonProps = {
-  onClick: () => void
-}
+  groups: PuzzleGroup[];
+  onClick: (groupId: number) => void;
+};
 
-export const GroupMenuButton = ({ onClick }:GroupMenuButtonProps) => {
+export const GroupMenuButton = ({ groups, onClick }: GroupMenuButtonProps) => {
   return (
-    <IconButton
-      position="fixed"
-      top={16}
-      right={4}
-      icon={<ArrowRightIcon />}
-      aria-label="Next Game"
-      colorScheme="green"
-      onClick={onClick}
-    />
-  )
-}
+    <ButtonGroup
+      position="relative"
+      top={4}
+      width="full"
+      maxWidth="3xl"
+      py={3}
+      spacing="1rem"
+    >
+      {Boolean(groups.length) &&
+        groups.map((group) => (
+          <Button
+            key={group.id}
+            position="relative"
+            aria-label="Next Game"
+            colorScheme="green"
+            onClick={() => onClick(group.id)}
+          >{group.id}</Button>
+        ))}
+    </ButtonGroup>
+  );
+};
