@@ -22,7 +22,7 @@ export const PuzzleGrid = ({
         `repeat(${puzzleSize.col}, 1fr)`,
       ]}
       gap={["3", "4", `${Math.floor(5 / (puzzleSize.col / 4))}`]}
-      px={["0", ".6rem", `${Math.round((10 / puzzleSize.col), 2)}rem`]}
+      px={["0", ".6rem", `${Math.round((10 / puzzleSize.col))}rem`]}
       {...props}
     />
   );
