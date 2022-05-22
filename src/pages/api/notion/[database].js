@@ -84,15 +84,38 @@ const convertFilter = (filter) => {
   return compound ? { [compound]: filterGroup } : { ...filterGroup[0] }
 };
 
+/*
+  sorts: {
+    sorts: [
+      ['id', 'descending'],
+    ]
+  }
+
+  =>
+
+  "sorts": [
+    {
+      "property": "id",
+      "direction": "descending"
+    }
+  ]
+*/
+
+const convertSorts = ({ sorts }) => sorts.map((sort) => {
+  const [property, direction] = sort
+  return { property, direction }
+})
+
 export default async function handler(req, res) {
-  const { database, filter, sort } = req.query;
+  const { database, filter, sorts } = req.query;
 
   const convertedFilter = filter && convertFilter(JSON.parse(filter))
+  const convertedSorts = sorts && convertSorts(JSON.parse(sorts))
   try {
     const notionDB = new NotionDB();
     const response = await notionDB.query(DB_ID[database], {
       filter: convertedFilter,
-      sort,
+      sorts: convertedSorts,
     });
 
     res.status(200).json(response.results);

@@ -3,7 +3,7 @@ import { Client } from "@notionhq/client";
 const defaultFilter = {
   or: [
     {
-      property: "name",
+      property: "id",
       title: {
         is_not_empty: true,
       },
