@@ -92,6 +92,8 @@ const Index = () => {
         </Stack>
         <Stack direction={"row"} spacing="1.5rem" alignItems={"center"}>
           <Text
+            bgGradient="linear(to-l, heroGradientStart, heroGradientEnd)"
+            bgClip="text"
             fontSize={["2xl", "3xl"]}
             align={"center"}
             mt={["-0.8em", "0"]}
