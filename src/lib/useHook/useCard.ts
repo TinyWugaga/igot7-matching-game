@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 export default function({ puzzle }: { puzzle: Puzzle[] }) {
   const [activeCards, setActiveCards] = useState<number[]>([]);
@@ -6,24 +6,22 @@ export default function({ puzzle }: { puzzle: Puzzle[] }) {
   const [isHitting, setIsHitting] = useState(false);
 
   useEffect(() => {
-      // TODO: set can't hit status
-      setTimeout(() => {
-        if (activeCards.length === 2) {
-          setIsHitting(true);
+    // TODO: set can't hit status
+    setTimeout(() => {
+      if (activeCards.length === 2) {
+        setIsHitting(true);
 
-          const isHit =
-            puzzle[activeCards[0]].cardId === puzzle[activeCards[1]].cardId;
+        const isHit =
+          puzzle[activeCards[0]].cardId === puzzle[activeCards[1]].cardId;
 
-          if (isHit) {
-            setHitCards([...hitCards, ...activeCards]);
-          }
-          setActiveCards([]);
-          setIsHitting(false);
+        if (isHit) {
+          setHitCards([...hitCards, ...activeCards]);
         }
-      }, 680);
-    },
-    [activeCards]
-  );
+        setActiveCards([]);
+        setIsHitting(false);
+      }
+    }, 680);
+  }, [activeCards]);
 
   const onHitCard = async (index: number) => {
     if (!isHitting && activeCards.length < 2) {
@@ -31,20 +29,25 @@ export default function({ puzzle }: { puzzle: Puzzle[] }) {
     }
   };
 
-  useEffect(() => {
-    resetGame();
-  }, [puzzle]);
+  const isAllHit = useMemo(() => Boolean(hitCards.length) && (hitCards.length === puzzle.length), [
+    hitCards,
+    puzzle,
+  ]);
 
-  const resetGame = () => {
+  const resetCards = () => {
     setActiveCards([]);
     setHitCards([]);
-    setIsHitting(false);
+    setTimeout(() => {
+      setIsHitting(false);
+    },150)
   };
 
   return {
     activeCards,
     hitCards,
+    isAllHit,
+
     onHitCard,
-    resetGame
+    resetCards
   };
 }

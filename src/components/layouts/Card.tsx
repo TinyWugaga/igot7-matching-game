@@ -1,13 +1,20 @@
-import { AspectRatio, AspectRatioProps } from '@chakra-ui/react'
+import { AspectRatio, AspectRatioProps } from "@chakra-ui/react";
 
 export const Card = (props: AspectRatioProps) => (
   <AspectRatio
-    position = "absolute"
-    width= "100%"
-    height= "100%"
-    bg="green.500"
-    bgGradient="linear(45deg, teal.500 45%, green.500)"
-    ratio={[4/3, 3/4, 2/3]}
+    position="absolute"
+    width="100%"
+    height="100%"
+    overflow="hidden"
+    rounded="lg"
+    bg="teal.500"
+    bgGradient="linear(to-tr, blackAlpha.400 0%, blackAlpha.300 32%,  whiteAlpha.200 60%, whiteAlpha.400 85%)"
+    borderColor="whiteAlpha.500"
+    borderWidth="0.15rem"
+    _hover={{
+      borderColor: "whiteAlpha.800",
+    }}
+    ratio={[4 / 3, 3 / 4, 2 / 3]}
     {...props}
   />
-)
+);

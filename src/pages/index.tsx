@@ -1,4 +1,5 @@
-import { Grid, GridItem, Image, Text, Button } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { Image, Text, Stack, Button, IconButton } from "@chakra-ui/react";
 
 import { Container } from "@/components/layouts/Container";
 import { Hero } from "@/components/layouts/Hero";
@@ -6,42 +7,118 @@ import { Main } from "@/components/layouts/Main";
 import { Footer } from "@/components/layouts/Footer";
 import { PuzzleGrid, PuzzleGridItem } from "@/components/layouts/PuzzleGrid";
 
-import { GameMenu } from "@/components/GameMenu";
+import { VideoModal } from "@/components/VideoModal";
+import { DarkModeSwitch } from "@/components/DarkModeSwitch";
 import { GroupMenuButton } from "@/components/GroupMenuButton";
 import { Card } from "@/components/layouts/Card";
+import {
+  PlayCircleIcon,
+  PauseCircleIcon,
+  RefreshIcon,
+} from "@/components/icons";
 
 import usePuzzle from "@/lib/useHook/usePuzzle";
 import useCard from "@/lib/useHook/useCard";
 import useTimer from "@/lib/useHook/useTimer";
 
 const Index = () => {
+  const [isGaming, setIsGaming] = useState(false);
+  const [isGameStop, setIsGameStop] = useState(true);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
   const { puzzleGroups, puzzle, puzzleSize, setPuzzleGroupId } = usePuzzle();
-  const { activeCards, hitCards, onHitCard } = useCard({ puzzle });
+  const { activeCards, hitCards, isAllHit, onHitCard, resetCards } = useCard({
+    puzzle,
+  });
   const {
     startTimer,
-    // stopTimer,
-    // resumeTimer,
-    // resetTimer,
+    stopTimer,
+    resumeTimer,
+    resetTimer,
     currentTimer,
   } = useTimer();
+
+  const startGame = () => {
+    setIsGaming(true);
+    setIsGameStop(false);
+    startTimer();
+  };
+  const stopGame = () => {
+    setIsGameStop(true);
+    stopTimer();
+  };
+  const resumeGame = () => {
+    setIsGameStop(false);
+    resumeTimer();
+  };
+  const resetGame = () => {
+    setIsGaming(false);
+    setIsGameStop(true);
+    resetTimer();
+    resetCards();
+  };
+
+  useEffect(() => {
+    if (isAllHit) {
+      stopGame();
+      setIsGaming(false);
+      setIsVideoModalOpen(true)
+    }
+  }, [isAllHit]);
 
   return (
     <Container height="100vh">
       <Hero>
-        <GroupMenuButton
-          groups={puzzleGroups}
-          onClick={(id) => setPuzzleGroupId(id)}
-        />
-        <Button
-          isLoading={Boolean(puzzle.length === 0)}
-          loadingText="Preparing"
-          colorScheme="teal"
-          variant="outline"
-          onClick={startTimer}
+        <Stack
+          direction={["row", "column"]}
+          position="fixed"
+          width={["100%", "auto"]}
+          pt={["toolbar.top.sm", "toolbar.top.md", "toolbar.top.lg"]}
+          left={0}
+          right={4}
+          px={"toolbar.x"}
+          justifyContent={"space-between"}
+          alignItems={"flex-end"}
+          spacing="1rem"
         >
-          Start Game
-        </Button>
-        <Text>{currentTimer}</Text>
+          <DarkModeSwitch />
+          <GroupMenuButton
+            groups={puzzleGroups}
+            onClick={(id) => {
+              resetGame();
+              setPuzzleGroupId(id);
+            }}
+          />
+        </Stack>
+        <Stack direction={"row"} spacing="1.5rem" alignItems={"center"}>
+          <Text
+            fontSize={["2xl", "3xl"]}
+            align={"center"}
+            mt={["-0.8em", "0"]}
+            ml={isGaming && !isGameStop ? "2.5em" : "0"}
+            pt={["0", "1.2rem"]}
+            fontWeight="600"
+          >
+            COME N' GET IT!
+            <br />
+            {currentTimer}
+          </Text>
+          {isGaming && !isGameStop && (
+            <IconButton
+              colorScheme="whiteAlpha"
+              variant="ghost"
+              aria-label={"Stop Game"}
+              icon={<PauseCircleIcon boxSize={["1.5em", "2em"]} color="text" />}
+              width={["2em", "3em"]}
+              height={["2em", "3em"]}
+              left={["-3.5em", "6em"]}
+              style={{
+                marginTop: "auto",
+              }}
+              onClick={stopGame}
+            />
+          )}
+        </Stack>
       </Hero>
 
       <Main>
@@ -49,7 +126,10 @@ const Index = () => {
           {Boolean(puzzle.length) &&
             puzzle.map((card: { name: string; url: string }, i) => (
               <PuzzleGridItem key={i} onClick={() => onHitCard(i)}>
-                <Card>
+                <Card
+                  bg={isGaming ? "ahgasae.alpha.500" : "gray.400"}
+                  bgGradient="linear(to-tr, rgba(0, 128, 128, .8) 0%, rgba(0, 128, 128, .6) 38%, rgba(0, 128, 128, .5) 62%, rgba(0, 128, 128, .3) 92%)"
+                >
                   <Image
                     position="absolute"
                     height="100%"
@@ -67,7 +147,69 @@ const Index = () => {
               </PuzzleGridItem>
             ))}
         </PuzzleGrid>
-        <GameMenu />
+
+        {(!isGaming || isGameStop) && (
+          <Stack
+            direction={"row"}
+            position="absolute"
+            width="100%"
+            height="100%"
+            top="0"
+            left="0"
+            bgColor="containerMask"
+            justifyContent={"center"}
+            style={{ marginTop: 0 }}
+          >
+            {Boolean(puzzle.length === 0) ? (
+              <Button
+                isLoading={true}
+                loadingText="Preparing..."
+                colorScheme="teal"
+                variant="outline"
+                margin="auto"
+              >
+                {"Start Game"}
+              </Button>
+            ) : (
+              <>
+                {(isGaming || !isAllHit) && (
+                  <IconButton
+                    colorScheme="whiteAlpha"
+                    variant="ghost"
+                    aria-label={
+                      isAllHit || !isGaming ? "Play Game" : "Resume Game"
+                    }
+                    icon={<PlayCircleIcon boxSize="3em" color="text" />}
+                    flex={1}
+                    maxWidth="4em"
+                    height="4em"
+                    ml={isGaming ? "auto" : "0"}
+                    mr={isGaming ? ".5rem" : "0"}
+                    my={"auto"}
+                    onClick={isAllHit || !isGaming ? startGame : resumeGame}
+                  />
+                )}
+                {(isGaming || isAllHit) && (
+                  <IconButton
+                    colorScheme="whiteAlpha"
+                    variant="ghost"
+                    aria-label="Restart Game"
+                    icon={<RefreshIcon boxSize="3em" color="text" />}
+                    flex={1}
+                    maxWidth="4em"
+                    height="4em"
+                    style={{
+                      margin: "auto",
+                      marginLeft: `${isAllHit ? 'auto' : '.5rem'}`,
+                    }}
+                    onClick={resetGame}
+                  />
+                )}
+              </>
+            )}
+          </Stack>
+        )}
+        <VideoModal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)} />
       </Main>
 
       <Footer>

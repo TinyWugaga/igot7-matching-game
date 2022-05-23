@@ -27,6 +27,14 @@ const sizes = {
 }
 
 const space = {
+  toolbar: {
+    x: '1rem',
+    top: {
+      sm: '1.2em',
+      md: '1em',
+      lg: '1.2em'
+    }
+  },
   footer: {
     sm: '1.6rem',
     md: '2rem',
@@ -35,7 +43,13 @@ const space = {
 }
 
 const colors = {
-  black: '#16161D'
+  black: '#16161D',
+  ahgasae: {
+    default: 'rgba(80, 170, 91, 1)',
+    alpha: {
+      500: 'rgba(80, 170, 91, .5)'
+    }
+  }
 }
 
 const fonts = { mono: `'Menlo', monospace` }
@@ -73,6 +87,10 @@ const theme = extendTheme({
       ahgasae: {
         default: 'rgba(80, 170, 91, 1)',
         _dark: '#a8d18b',
+      },
+      containerMask: {
+        default: 'rgba(255, 255, 255, .3)',
+        _dark: 'rgba(15, 15, 15, .3)',
       }
     },
   },
