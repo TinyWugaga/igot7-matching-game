@@ -26,7 +26,13 @@ const Index = () => {
   const [isGameStop, setIsGameStop] = useState(true);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
-  const { puzzleGroups, puzzle, puzzleSize, setPuzzleGroupId } = usePuzzle();
+  const {
+    puzzleGroupId,
+    puzzleGroups,
+    puzzle,
+    puzzleSize,
+    setPuzzleGroupId,
+  } = usePuzzle();
   const { activeCards, hitCards, isAllHit, onHitCard, resetCards } = useCard({
     puzzle,
   });
@@ -42,27 +48,43 @@ const Index = () => {
     setIsGaming(true);
     setIsGameStop(false);
     startTimer();
+    window.gtag("event", "start_game", {
+      groupId: puzzleGroupId
+    });
   };
   const stopGame = () => {
     setIsGameStop(true);
     stopTimer();
+    window.gtag("event", "stop_game", {
+      groupId: puzzleGroupId
+    });
   };
   const resumeGame = () => {
     setIsGameStop(false);
     resumeTimer();
+    window.gtag("event", "resume_game", {
+      groupId: puzzleGroupId
+    });
   };
   const resetGame = () => {
     setIsGaming(false);
     setIsGameStop(true);
     resetTimer();
     resetCards();
+    window.gtag("event", "reset_game", {
+      groupId: puzzleGroupId
+    });
   };
 
   useEffect(() => {
     if (isAllHit) {
       stopGame();
       setIsGaming(false);
-      setIsVideoModalOpen(true)
+      setIsVideoModalOpen(true);
+      window.gtag("event", "all_hit", {
+        groupId: puzzleGroupId,
+        time: currentTimer,
+      });
     }
   }, [isAllHit]);
 
@@ -202,7 +224,7 @@ const Index = () => {
                     height="4em"
                     style={{
                       margin: "auto",
-                      marginLeft: `${isAllHit ? 'auto' : '.5rem'}`,
+                      marginLeft: `${isAllHit ? "auto" : ".5rem"}`,
                     }}
                     onClick={resetGame}
                   />
@@ -211,7 +233,10 @@ const Index = () => {
             )}
           </Stack>
         )}
-        <VideoModal isOpen={isVideoModalOpen} onClose={() => setIsVideoModalOpen(false)} />
+        <VideoModal
+          isOpen={isVideoModalOpen}
+          onClose={() => setIsVideoModalOpen(false)}
+        />
       </Main>
 
       <Footer>

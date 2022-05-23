@@ -87,6 +87,7 @@ export default function() {
   return {
     setPuzzleGroupId,
 
+    puzzleGroupId,
     puzzleGroups,
     puzzle,
     puzzleSize,

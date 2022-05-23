@@ -18,6 +18,7 @@
         "src/components/*"
       ]
     },
+    "types": ["@types/gtag.js"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true, // allow import React from 'react';
     "skipLibCheck": true,

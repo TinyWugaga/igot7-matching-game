@@ -6,6 +6,7 @@ export default class Document extends NextDocument {
     return (
       <Html>
         <Head>
+          <meta property="og:title" content="GOT7 2022 COMING BACK!" key="title" />
           {/* Global site tag (gtag.js) - Google Analytics */}
           <script
             async
