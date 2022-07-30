@@ -61,10 +61,12 @@ export const convertFilter = (filter: FilterType): ConvertFilter => {
     const condition = conditionString.split(".");
     condition.reverse();
     const property = condition.pop();
-    const spreadCondition = condition.reduce<Record<string, object>>(
-      (acc, key) => ({ [key]: acc }),
-      {}
-    );
+    const spreadCondition = condition
+      .slice(2)
+      .reduce<Record<string, object | string>>(
+        (acc, key) => ({ [key]: acc }),
+        { [condition[1]]: condition[0] }
+      );
 
     return {
       property,

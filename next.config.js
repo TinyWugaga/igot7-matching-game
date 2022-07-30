@@ -12,7 +12,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/got7',
+        destination: '/GOT7',
         permanent: false,
       },
     ]

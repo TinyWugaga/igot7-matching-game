@@ -11,8 +11,8 @@ import {
 type MessageModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
-  message: string;
+  title?: string;
+  message?: string;
 };
 
 export const MessageModal = ({
@@ -33,14 +33,14 @@ export const MessageModal = ({
       <ModalContent>
         <ModalHeader
           fontFamily={"IBM Plex Sans"}
-          fontSize={"2xl"}
+          fontSize={"3xl"}
           textAlign="center"
         >
           {title}
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody pb={6}>
-          <Text maxW="80vw" fontSize={"1em"} textAlign="center" margin="auto" fontWeight={400}>
+        <ModalBody pt={0} pb={6}>
+          <Text maxW="80vw" fontSize={"medium"} textAlign="center" margin="auto" fontWeight={400}>
             {message}
           </Text>
         </ModalBody>

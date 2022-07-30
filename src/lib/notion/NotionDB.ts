@@ -1,6 +1,6 @@
 import { Client } from "@notionhq/client";
 
-import { convertFilter, convertSorts } from "@/lib/apis";
+import { convertFilter } from "@/lib/apis";
 
 const defaultFilter: ReturnType<typeof convertFilter> = {
   or: [
@@ -13,13 +13,6 @@ const defaultFilter: ReturnType<typeof convertFilter> = {
   ],
 };
 
-const defaultSorts: ReturnType<typeof convertSorts> = [
-  {
-    property: "id",
-    direction: "descending",
-  }
-];
-
 class NotionDB {
   _notion;
 
@@ -27,11 +20,12 @@ class NotionDB {
     this._notion = new Client({ auth: process.env.NOTION_KEY });
   }
 
-  async query(databaseId = '', { filter = defaultFilter, sorts = defaultSorts } = {}) {
+  /* @ts-ignore */
+  async query(databaseId = '', options) {
+    const { filter = defaultFilter, sorts } = options
     try {
       return this._notion.databases.query({
         database_id: databaseId,
-        /* @ts-ignore */
         filter,
         ...(sorts && { sorts }),
       });

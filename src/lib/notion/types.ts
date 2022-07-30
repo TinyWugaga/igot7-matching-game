@@ -1,8 +1,8 @@
 import { ReactElement } from "react";
 
 export enum DataBaseName {
-  GOT7 = "got7",
-  XIAOGA = "xiaoga",
+  GOT7 = "GOT7",
+  XIAOGA = "XIAOGA",
 }
 
 export enum DataBaseType {
@@ -20,7 +20,7 @@ export type DataBaseConfig = Record<
       message,
     }: {
       isOpen: boolean;
-      onClose: Function;
+      onClose: () =>void;
       title?: string;
       message?: string;
     }) => ReactElement;

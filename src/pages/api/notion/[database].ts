@@ -14,13 +14,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ...DATABASE_CONFIG[topic as DataBaseName],
   };
 
-  const convertedFilter = convertFilter(JSON.parse(filter as string));
-  const convertedSorts = convertSorts(JSON.parse(sorts as string));
+  const convertedFilter = filter && convertFilter(JSON.parse(filter as string));
+  const convertedSorts = sorts && convertSorts(JSON.parse(sorts as string));
   try {
     const notionDB = new NotionDB();
     const response = await notionDB.query(DB_ID[database as DataBaseType], {
-      filter: convertedFilter,
-      sorts: convertedSorts,
+      ...(convertedFilter && {filter: convertedFilter}),
+      ...(convertedSorts && {sorts: convertedSorts}),
     });
 
     res.status(200).json(response.results);
