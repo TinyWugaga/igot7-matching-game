@@ -40,7 +40,7 @@ const Index = () => {
     puzzle,
     puzzleSize,
     setPuzzleGroupId,
-  } = usePuzzle({ topic });
+  } = usePuzzle({ topic: topic.toLowerCase() });
   const { activeCards, hitCards, isAllHit, onHitCard, resetCards } = useCard({
     puzzle,
   });

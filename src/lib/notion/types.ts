@@ -1,8 +1,8 @@
 import { ReactElement } from "react";
 
 export enum DataBaseName {
-  GOT7 = "GOT7",
-  XIAOGA = "XIAOGA",
+  GOT7 = "got7",
+  XIAOGA = "xiaoga",
 }
 
 export enum DataBaseType {
