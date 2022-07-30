@@ -18,7 +18,9 @@
         "src/components/*"
       ]
     },
-    "types": ["@types/gtag.js"],
+    "types": [
+      "@types/gtag.js"
+    ],
     "allowJs": true,
     "allowSyntheticDefaultImports": true, // allow import React from 'react';
     "skipLibCheck": true,
@@ -42,8 +44,9 @@
     "src/lib/useHook/*.d.ts",
     "src/global.d.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "src/lib/useHook/usePuzzle.ts"  ],
+    "**/*.tsx",
+    "src/lib/useHook/usePuzzle.ts"
+  ],
   "exclude": [
     "node_modules"
   ]

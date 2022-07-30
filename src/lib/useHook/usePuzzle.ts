@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-import { DATABASE_NAME } from "@/lib/notion/constants";
+import { DataBaseType } from "@/lib/notion/types";
 
 function fisherYatesShuffle(arr: any[]): void {
   for (let i: number = arr.length - 1; i > 0; i--) {
@@ -29,10 +29,11 @@ export function countPuzzleSize(number: number) {
   return { col: number / 2, row: 2 };
 }
 
-export async function fetchCardGroups() {
-  const { data } = await axios.get(`/api/notion/${DATABASE_NAME.GROUPS}`, {
+export async function fetchCardGroups(topic: string) {
+  const { data } = await axios.get(`/api/notion/${DataBaseType.GROUPS}`, {
     params: {
-      sorts: { sorts:[["id", "ascending"]]},
+      topic,
+      sorts: { sorts: [["id", "ascending"]] },
     },
   });
 
@@ -43,9 +44,10 @@ export async function fetchCardGroups() {
   return groups;
 }
 
-export async function fetchCards(groupId: number | string) {
-  const { data } = await axios.get(`/api/notion/${DATABASE_NAME.CARDS}`, {
+export async function fetchCards(topic: string, groupId: number | string) {
+  const { data } = await axios.get(`/api/notion/${DataBaseType.CARDS}`, {
     params: {
+      topic,
       filter: {
         compound: "or",
         conditions: ["group_id.rollup.every.rich_text.equals." + groupId],
@@ -61,28 +63,30 @@ export async function fetchCards(groupId: number | string) {
   return cards;
 }
 
-export default function() {
+export default function({ topic }: { topic: string }) {
   const [puzzleGroupId, setPuzzleGroupId] = useState(1);
   const [puzzleGroups, setPuzzleGroup] = useState<PuzzleGroup[]>([]);
   const [puzzle, setPuzzle] = useState<Puzzle[]>([]);
   const [puzzleSize, setPuzzleSize] = useState<PuzzleSize>({ col: 0, row: 0 });
 
   const getPuzzleGroup = async () => {
-    const groups = await fetchCardGroups();
+    const groups = await fetchCardGroups(topic);
     setPuzzleGroup(groups);
   };
 
   useEffect(() => {
     const initPuzzle = async () => {
       await getPuzzleGroup();
-      const cards = await fetchCards(puzzleGroupId);
+      const cards = await fetchCards(topic, puzzleGroupId);
 
       setPuzzle(generatePuzzle(cards));
       setPuzzleSize(countPuzzleSize(cards.length));
     };
 
-    initPuzzle();
-  }, [puzzleGroupId]);
+    if(topic) {
+      initPuzzle();
+    }
+  }, [topic, puzzleGroupId]);
 
   return {
     setPuzzleGroupId,

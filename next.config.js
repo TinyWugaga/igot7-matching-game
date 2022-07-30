@@ -8,6 +8,15 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/got7',
+        permanent: false,
+      },
+    ]
+  },
 };
 
 module.exports = nextConfig;
